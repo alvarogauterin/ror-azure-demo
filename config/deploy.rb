@@ -2,15 +2,15 @@
 # http://www.talkingquickly.co.uk/2014/01/deploying-rails-apps-to-a-vps-with-capistrano-v3/
 
 set :application, 'ror-azure-demo'
-set :deploy_user, 'azureuser'
+set :deploy_user, 'alvarogauterin'
 
 # setup repo details
 set :scm, :git
-set :repo_url, 'https://github.com/m-gagne/ror-azure-demo.git'
+set :repo_url, 'https://github.com/alvarogauterin/ror-azure-demo.git'
 
 # setup rvm.
 set :rbenv_type, :user
-set :rbenv_ruby, '2.0.0-p451'
+set :rbenv_ruby, '2.3.0'
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
 set :rbenv_map_bins, %w{rake gem bundle ruby rails}
 
