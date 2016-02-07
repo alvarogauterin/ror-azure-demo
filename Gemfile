@@ -51,3 +51,6 @@ end
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+gem 'fitgem'
+gem 'azure'
+gem 'figaro'

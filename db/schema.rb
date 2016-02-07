@@ -11,7 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140303212202) do
+ActiveRecord::Schema.define(version: 20160207140548) do
+
+  create_table "fitbit_accounts", force: :cascade do |t|
+    t.string   "email"
+    t.string   "token"
+    t.string   "secret"
+    t.string   "fitbit_id"
+    t.string   "study_id"
+    t.integer  "phone_number"
+    t.integer  "weekly_average"
+    t.integer  "steps_yesterday"
+    t.integer  "goal_reached"
+    t.string   "activity_level"
+    t.datetime "last_sync_time"
+    t.datetime "last_reminder_message"
+    t.integer  "week"
+    t.datetime "activation_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "searches", force: :cascade do |t|
     t.string   "keyword"
