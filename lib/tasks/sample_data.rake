@@ -1,6 +1,26 @@
 require 'csv'
 require 'azure'
 
+task medicine_blob: :environment do
+  FitbitAccount.find((ENV['START'].to_i..FitbitAccount.count).to_a).each do |account|
+    config = {consumer_key:ENV["FITBIT_CONSUMER_KEY"],consumer_secret:ENV["FITBIT_CONSUMER_SECRET"],token:account.token,secret:account.secret,user_id:account.fitbit_id,unit_system:Fitgem::ApiUnitSystem.METRIC}
+    client = Fitgem::Client.new(config)
+    client.reconnect(config[:token],config[:secret])
+    prepare_blob_container account
+    Date.parse("2014-01-01").upto(Date.parse("2014-05-01")) do |date|
+      puts "#{account.id} | #{account.email} | #{date}"
+      steps = client.intraday_time_series({resource: :steps,date:date.to_s,detailLevel:"1min"})
+      if steps.nil?
+        puts "#{account.email} is nil"
+        next
+      else
+        steps_safe = steps["activities-steps-intraday"]["dataset"]
+        Azure.blobs.create_block_blob(account.fitbit_id.downcase,"fitbit-steps-#{account.fitbit_id.downcase}-#{date.to_s}.json",steps_safe.to_s)
+      end
+    end
+  end
+end
+
 namespace :db do
   desc "Fill database with sample data"
   task populate: :environment do
@@ -148,7 +168,7 @@ def export_steps_data_from_300_first_year_medicine_students_into_blob_storage
     client.reconnect(config[:token],config[:secret])
     prepare_blob_container account
     Date.parse("2014-01-01").upto(Date.parse("2014-05-01")) do |date|
-      puts ">>> #{account.email} | #{date}"
+      puts "#{account.id} | #{account.email} | #{date}"
       steps = client.intraday_time_series({resource: :steps,date:date.to_s,detailLevel:"1min"})
       if steps.nil?
         puts "#{account.email} is nil"
